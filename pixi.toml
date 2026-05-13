@@ -1,0 +1,17 @@
+[workspace]
+channels = ["pytorch","nvidia","conda-forge"]
+name = "roboticAttack"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+[pypi-options]
+no-build-isolation = true
+
+[dependencies]
+python = "3.10.*"
+pytorch-cuda= "12.4.*"
+setuptools = ">=82.0.1,<83"
+
+[pypi-dependencies]
+openvla = {path = "."}

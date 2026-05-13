@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+dataset/*
 
 # C extensions
 *.so
@@ -151,3 +152,6 @@ data/
 # Rollout videos and wandb logs
 rollouts/
 wandb/
+# pixi environments
+.pixi/*
+!.pixi/config.toml

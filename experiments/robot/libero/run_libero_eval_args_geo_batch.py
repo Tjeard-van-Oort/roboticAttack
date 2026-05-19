@@ -31,7 +31,7 @@ from libero.libero import benchmark
 import wandb
 import sys
 sys.path.append("PATH TO/white_patch")
-from appply_random_transform import RandomPatchTransform
+from VLAAttacker.white_patch.appply_random_transform import RandomPatchTransform
 import torch
 import os
 import random
@@ -111,7 +111,7 @@ def eval_libero(cfg) -> None:
     cfg.unnorm_key = cfg.task_suite_name
 
     # Load model
-    model = get_model(cfg,DEVICE=f"cuda:{cfg.cudaid}")
+    model = get_model(cfg)#,DEVICE=f"cuda:{cfg.cudaid}")
 
     # [OpenVLA] Check that the model contains the action un-normalization key
     if cfg.model_family == "openvla":
@@ -224,7 +224,7 @@ def eval_libero(cfg) -> None:
                         observation,
                         task_description,
                         processor=processor,
-                        DEVICE=f"cuda:{cfg.cudaid}",
+                        #DEVICE=f"cuda:{cfg.cudaid}",
                     )
 
                     # Normalize gripper action [0,1] -> [-1,+1] because the environment expects the latter
@@ -327,7 +327,7 @@ def parse_args():
     parser.add_argument("--local_log_dir", type=str, default="./experiments/logs", help="Local directory for eval logs")
     parser.add_argument("--use_wandb", type=bool, default=True, help="Whether to also log results in Weights & Biases")
     parser.add_argument("--wandb_project", type=str, default="LIBERO_simulation_test", help="Name of W&B project to log to (use default!)")
-    parser.add_argument("--wandb_entity", type=str, default="taowen_wang-rit", help="Name of entity to log under")
+    parser.add_argument("--wandb_entity", type=str, default="qcr-patches", help="Name of entity to log under")
     parser.add_argument("--seed", type=int, default=7, help="Random Seed (for reproducibility)")
     parser.add_argument("--patchroot", type=str, default="/spl_data/tw9146/openvla-main/run/white_patch_attack/a5083c2b-1186-4464-ab9f-1056211a2221/4000/patch.pt", help="")
     parser.add_argument("--x", type=int, default=2, help="")

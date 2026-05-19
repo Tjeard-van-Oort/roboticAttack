@@ -15,6 +15,8 @@ def parse_args():
     parser.add_argument('--max_concurrent_tasks', type=int, default=1, required=False)
     parser.add_argument('--task', nargs='+',
                         default=['libero_10'])
+    parser.add_argument("--wandb_project", type=str, default="LIBERO_simulation_test", help="Name of W&B project to log to (use default!)")
+    parser.add_argument("--wandb_entity", type=str, default="qcr-patches", help="Name of entity to log under")
     return parser.parse_args()
 
 def organize_exp(exp_path,args):
@@ -30,6 +32,9 @@ def organize_exp(exp_path,args):
     
     task_list = []
     iter_filename = os.listdir(exp_path)[0]
+    num_list = [int(x) for x in os.listdir(exp_path) if x.isdigit()]
+    num_list.sort()
+    iter_filename = num_list[-1]
     iter_filepath = os.path.join(exp_path, iter_filename)
     pt_filepath = os.path.join(iter_filepath, "patch.pt")
     for j in range(len(data)):
@@ -79,7 +84,7 @@ def main():
     random.shuffle(origin_task_list)
     task_list = []
     for item in origin_task_list:
-        train_cmd0 = f"python experiments/robot/libero/run_libero_eval_args_geo_batch.py --exp_name {item[0]['exp_name']} --pretrained_checkpoint {item[0]['checkpoints']} --task_suite_name {item[0]['dataset']} --num_trials_per_task {args.trials} --run_id_note {item[0]['run_id_note']} --local_log_dir {item[0]['local_log_dir']} --patchroot {item[0]['patchroot']} --cudaid {args.cudaid} --x {item[0]['x']} --y {item[0]['y']} --angle {item[0]['angle']} --shx {item[0]['shx']} --shy {item[0]['shy']} "
+        train_cmd0 = f"python experiments/robot/libero/run_libero_eval_args_geo_batch.py --exp_name {item[0]['exp_name']} --pretrained_checkpoint {item[0]['checkpoints']} --task_suite_name {item[0]['dataset']} --num_trials_per_task {args.trials} --run_id_note {item[0]['run_id_note']} --local_log_dir {item[0]['local_log_dir']} --wandb_project {args.wandb_project} --wandb_entity {args.wandb_entity} --patchroot {item[0]['patchroot']} --cudaid {args.cudaid} --x {item[0]['x']} --y {item[0]['y']} --angle {item[0]['angle']} --shx {item[0]['shx']} --shy {item[0]['shy']} "
         task_list.append([train_cmd0,item[1]])
     max_concurrent_tasks = args.max_concurrent_tasks  # Number of concurrent tasks
     task_queue = queue.Queue()
